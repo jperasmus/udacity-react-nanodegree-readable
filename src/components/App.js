@@ -5,6 +5,7 @@ import { Layout, Menu, Icon } from 'antd';
 import NotFound from './NotFound';
 import Category from './Category';
 import NewPost from './NewPost';
+import EditPost from './EditPost';
 import PostDetails from './PostDetails';
 import './App.css';
 
@@ -35,6 +36,7 @@ class App extends Component {
                 <Route exact path="/" component={Category} />
                 <Route exact path="/add-post" component={NewPost} />
                 <Route exact path="/:category" component={Category} />
+                <Route exact path="/:category/:post_id/edit" component={EditPost} />
                 <Route exact path="/:category/:post_id" component={PostDetails} />
                 <Route component={NotFound} />
               </Switch>
