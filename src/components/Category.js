@@ -7,7 +7,6 @@ import get from 'lodash.get';
 import capitalize from 'lodash.capitalize';
 
 import Posts from './Posts';
-
 import { fetchCategories, fetchPosts } from '../actions';
 
 class Category extends Component {
@@ -31,6 +30,15 @@ class Category extends Component {
       .fetchCategories()
       .then(() => this.props.fetchPosts(get(this.props, 'match.params.category')))
       .catch(error => message.error(`An error occurred while fetching the posts.\nDetails: ${error}`, 5));
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const currentCategory = get(this.props, 'match.params.category');
+    const nextCategory = get(nextProps, 'match.params.category');
+
+    if (currentCategory !== nextCategory) {
+      this.props.fetchPosts(nextCategory);
+    }
   }
 
   filterPostsChange = ({ key }) => {
