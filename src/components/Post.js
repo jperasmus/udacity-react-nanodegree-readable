@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { List, Avatar, Icon, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 import relativeDate from 'relative-date';
+import Voter from './Voter';
 
 class Post extends Component {
   render() {
@@ -11,7 +12,7 @@ class Post extends Component {
     return (
       <List.Item
         actions={[
-          <div>Vote mechanism...</div>,
+          <Voter id={id} type="posts" voteScore={voteScore} />,
           <Link to={`/${category}/${id}`}>
             <Tooltip title="View Post">
               <Icon type="eye" />
@@ -43,9 +44,7 @@ class Post extends Component {
           }
           description={body}
         />
-        <div>
-          {voteScore} ({commentCount === 1 ? '1 comment' : `${commentCount} comments`})
-        </div>
+        <div>{commentCount === 1 ? '1 comment' : `${commentCount} comments`}</div>
       </List.Item>
     );
   }

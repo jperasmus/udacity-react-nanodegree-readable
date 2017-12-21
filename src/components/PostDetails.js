@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import relativeDate from 'relative-date';
 import get from 'lodash.get';
 import Loader from './Loader';
+import Voter from './Voter';
 import { fetchCurrentPost, resetCurrentPost } from '../actions';
 
 const { Content, Sider } = Layout;
@@ -29,7 +30,7 @@ class PostDetails extends Component {
     return (
       <Layout>
         <Sider style={{ background: 'white' }}>
-          <div>Voter Component Placeholder... {voteScore}</div>
+          <Voter id={id} type="posts" voteScore={voteScore} size="large" />
         </Sider>
         <Content>
           <Card

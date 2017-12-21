@@ -2,7 +2,11 @@ const API_USERNAME = process.env.REACT_APP_API_USERNAME || 'ANYTHING';
 const API_PASSWORD = process.env.REACT_APP_API_PASSWORD || '';
 const API_BASE_URL = process.env.REACT_API_BASE_URL || 'http://localhost:3001';
 
-const http = url => fetch(url, { headers: { Authorization: `${API_USERNAME}:${API_PASSWORD}` } });
+const http = (url, options = {}) =>
+  fetch(url, {
+    ...options,
+    ...{ headers: { Authorization: `${API_USERNAME}:${API_PASSWORD}`, 'Content-Type': 'application/json' } }
+  });
 
 export function fetchCategories() {
   return http(`${API_BASE_URL}/categories`)
@@ -16,4 +20,16 @@ export function fetchPosts(category) {
 
 export function fetchCurrentPost(postId) {
   return http(`${API_BASE_URL}/posts/${postId}`).then(res => res.json());
+}
+
+export function voteUp(type, id) {
+  return http(`${API_BASE_URL}/${type}/${id}`, { method: 'POST', body: JSON.stringify({ option: 'upVote' }) }).then(
+    res => res.json()
+  );
+}
+
+export function voteDown(type, id) {
+  return http(`${API_BASE_URL}/${type}/${id}`, { method: 'POST', body: JSON.stringify({ option: 'downVote' }) }).then(
+    res => res.json()
+  );
 }

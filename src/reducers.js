@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import get from 'lodash.get';
 
 import {
   FETCH_CATEGORIES_SUCCESS,
@@ -9,8 +10,10 @@ import {
   FETCH_POST_FAILED,
   RESET_POSTS,
   RESET_CURRENT_POST,
+  VOTE_SUCCESS,
   META_POSTS_LOADING,
-  META_CURRENT_POST_LOADING
+  META_CURRENT_POST_LOADING,
+  META_VOTE_LOADING
 } from './actions';
 
 function categories(state = [], action) {
@@ -35,6 +38,22 @@ function posts(state = [], action) {
     case RESET_POSTS:
       return [];
 
+    case VOTE_SUCCESS: {
+      const id = get(action, 'payload.id');
+
+      if (!id || action.voteType !== 'posts') {
+        return state;
+      }
+
+      return state.map(post => {
+        if (post.id === id) {
+          return action.payload;
+        }
+
+        return post;
+      });
+    }
+
     default:
       return state;
   }
@@ -49,6 +68,16 @@ function currentPost(state = {}, action) {
     case RESET_CURRENT_POST:
       return {};
 
+    case VOTE_SUCCESS: {
+      const id = get(action, 'payload.id');
+
+      if (!id || action.voteType !== 'posts' || id !== state.id) {
+        return state;
+      }
+
+      return action.payload;
+    }
+
     default:
       return state;
   }
@@ -56,7 +85,8 @@ function currentPost(state = {}, action) {
 
 const appMetaDefaultState = {
   postsLoading: false,
-  currentPostLoading: false
+  currentPostLoading: false,
+  voteLoading: false
 };
 
 function meta(state = appMetaDefaultState, action) {
@@ -66,6 +96,9 @@ function meta(state = appMetaDefaultState, action) {
 
     case META_CURRENT_POST_LOADING:
       return { ...state, ...{ currentPostLoading: action.loading } };
+
+    case META_VOTE_LOADING:
+      return { ...state, ...{ voteLoading: action.loading } };
 
     default:
       return state;

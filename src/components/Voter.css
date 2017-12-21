@@ -1,0 +1,28 @@
+.voter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s ease;
+  opacity: 1;
+  padding: 0 8px;
+  width: 100%;
+  flex-direction: column;
+}
+
+.voter > i {
+  transition: transform 0.1s ease-out;
+}
+
+.voter > i:hover {
+  transform: scale(1.25);
+}
+
+.voter > span {
+  font-weight: bold;
+  padding: 5px;
+}
+
+.voter.large > i,
+.voter.large > span {
+  font-size: 26px;
+}

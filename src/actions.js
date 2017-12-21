@@ -2,6 +2,7 @@ import * as api from './utils/api';
 
 export const META_POSTS_LOADING = 'META_POSTS_LOADING';
 export const META_CURRENT_POST_LOADING = 'META_CURRENT_POST_LOADING';
+export const META_VOTE_LOADING = 'META_VOTE_LOADING';
 export const FETCH_CATEGORIES_SUCCESS = 'FETCH_CATEGORIES_SUCCESS';
 export const FETCH_CATEGORIES_FAILED = 'FETCH_CATEGORIES_FAILED';
 export const FETCH_POSTS_SUCCESS = 'FETCH_POSTS_SUCCESS';
@@ -10,6 +11,10 @@ export const RESET_POSTS = 'RESET_POSTS';
 export const FETCH_POST_SUCCESS = 'FETCH_POST_SUCCESS';
 export const FETCH_POST_FAILED = 'FETCH_POST_FAILED';
 export const RESET_CURRENT_POST = 'RESET_CURRENT_POST';
+export const VOTE_SUCCESS = 'VOTE_SUCCESS';
+export const VOTE_FAILED = 'VOTE_FAILED';
+export const VOTE_DOWN_SUCCESS = 'VOTE_DOWN_SUCCESS';
+export const VOTE_DOWN_FAILED = 'VOTE_DOWN_FAILED';
 
 /** *********
  * APP META *
@@ -21,6 +26,11 @@ export const postsLoading = loading => ({
 
 export const currentPostLoading = loading => ({
   type: META_CURRENT_POST_LOADING,
+  loading
+});
+
+export const voteLoading = loading => ({
+  type: META_VOTE_LOADING,
   loading
 });
 
@@ -106,6 +116,54 @@ export function fetchCurrentPost(postId) {
       .catch(error => {
         dispatch(currentPostLoading(false));
         return dispatch(currentPostFetchFailed(error.message));
+      });
+  };
+}
+
+/** ******
+ * VOTES *
+ ******* */
+export const voteSuccess = (voteType, payload) => ({
+  type: VOTE_SUCCESS,
+  voteType,
+  payload
+});
+
+export const voteFailed = error => ({
+  type: VOTE_FAILED,
+  error
+});
+
+export function voteUp(type, id) {
+  return dispatch => {
+    dispatch(voteLoading(true));
+
+    return api
+      .voteUp(type, id)
+      .then(payload => {
+        dispatch(voteLoading(false));
+        return dispatch(voteSuccess(type, payload));
+      })
+      .catch(error => {
+        dispatch(voteLoading(false));
+        return dispatch(voteFailed(error.message));
+      });
+  };
+}
+
+export function voteDown(type, id) {
+  return dispatch => {
+    dispatch(voteLoading(true));
+
+    return api
+      .voteDown(type, id)
+      .then(payload => {
+        dispatch(voteLoading(false));
+        return dispatch(voteSuccess(type, payload));
+      })
+      .catch(error => {
+        dispatch(voteLoading(false));
+        return dispatch(voteFailed(error.message));
       });
   };
 }
