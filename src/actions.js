@@ -15,6 +15,8 @@ export const VOTE_SUCCESS = 'VOTE_SUCCESS';
 export const VOTE_FAILED = 'VOTE_FAILED';
 export const VOTE_DOWN_SUCCESS = 'VOTE_DOWN_SUCCESS';
 export const VOTE_DOWN_FAILED = 'VOTE_DOWN_FAILED';
+export const DELETE_POST_SUCCESS = 'DELETE_POST_SUCCESS';
+export const DELETE_POST_FAILED = 'DELETE_POST_FAILED';
 
 /** *********
  * APP META *
@@ -118,6 +120,25 @@ export function fetchCurrentPost(postId) {
         return dispatch(currentPostFetchFailed(error.message));
       });
   };
+}
+
+export const postDeleteSuccess = payload => ({
+  type: DELETE_POST_SUCCESS,
+  voteType: 'posts',
+  payload
+});
+
+export const postDeleteFailed = error => ({
+  type: DELETE_POST_FAILED,
+  error
+});
+
+export function deletePost(postId) {
+  return dispatch =>
+    api
+      .deletePost(postId)
+      .then(post => dispatch(postDeleteSuccess(post)))
+      .catch(error => dispatch(postDeleteFailed(error.message)));
 }
 
 /** ******

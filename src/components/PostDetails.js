@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Layout, Card, Icon, Tooltip } from 'antd';
+import { Layout, Card, Icon, Tooltip, Alert, Modal } from 'antd';
 import { Link } from 'react-router-dom';
 import relativeDate from 'relative-date';
 import get from 'lodash.get';
 import Loader from './Loader';
 import Voter from './Voter';
-import { fetchCurrentPost, resetCurrentPost } from '../actions';
+import { fetchCurrentPost, resetCurrentPost, deletePost } from '../actions';
 
 const { Content, Sider } = Layout;
+const { confirm } = Modal;
 
 class PostDetails extends Component {
   componentDidMount() {
@@ -20,8 +21,36 @@ class PostDetails extends Component {
     this.props.resetCurrentPost();
   }
 
+  confirmPostDelete = () => {
+    confirm({
+      title: 'Sure you want to delete this post?',
+      content: 'This action can not be undone',
+      onOk: () => {
+        this.props.deletePost(this.props.id);
+      },
+      onCancel() {
+        // User pressed "Cancel", don't do anything
+      }
+    });
+  };
+
   render() {
-    const { currentPostLoading, title, body, id, author, voteScore, commentCount, timestamp, category } = this.props;
+    const {
+      currentPostLoading,
+      title,
+      body,
+      id,
+      author,
+      voteScore,
+      commentCount,
+      timestamp,
+      category,
+      deleted
+    } = this.props;
+
+    if (deleted) {
+      return <Alert message="This post has been deleted" type="info" />;
+    }
 
     if (currentPostLoading) {
       return <Loader text="Loading Post Details" />;
@@ -46,7 +75,7 @@ class PostDetails extends Component {
                   <Icon type="edit" />
                 </Tooltip>
               </Link>,
-              <a>
+              <a href="#" onClick={() => this.confirmPostDelete()}>
                 <Tooltip title="Delete Post">
                   <Icon type="delete" />
                 </Tooltip>
@@ -74,7 +103,7 @@ PostDetails.defaultProps = {
   author: '',
   category: '',
   voteScore: 0,
-  // deleted: '',
+  deleted: false,
   commentCount: 0
 };
 
@@ -83,6 +112,7 @@ PostDetails.propTypes = {
   currentPostLoading: PropTypes.bool.isRequired,
   fetchCurrentPost: PropTypes.func.isRequired,
   resetCurrentPost: PropTypes.func.isRequired,
+  deletePost: PropTypes.func.isRequired,
   id: PropTypes.string,
   timestamp: PropTypes.number,
   title: PropTypes.string,
@@ -90,7 +120,7 @@ PostDetails.propTypes = {
   author: PropTypes.string,
   category: PropTypes.string,
   voteScore: PropTypes.number,
-  // deleted: PropTypes.bool,
+  deleted: PropTypes.bool,
   commentCount: PropTypes.number
 };
 
@@ -101,7 +131,8 @@ const mapStateToProps = ({ currentPost, meta }) => ({
 
 const mapDispatchToProps = dispatch => ({
   resetCurrentPost: () => dispatch(resetCurrentPost()),
-  fetchCurrentPost: postId => dispatch(fetchCurrentPost(postId))
+  fetchCurrentPost: postId => dispatch(fetchCurrentPost(postId)),
+  deletePost: postId => dispatch(deletePost(postId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostDetails);

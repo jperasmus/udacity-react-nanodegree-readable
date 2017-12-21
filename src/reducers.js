@@ -10,6 +10,7 @@ import {
   FETCH_POST_FAILED,
   RESET_POSTS,
   RESET_CURRENT_POST,
+  DELETE_POST_SUCCESS,
   VOTE_SUCCESS,
   META_POSTS_LOADING,
   META_CURRENT_POST_LOADING,
@@ -38,7 +39,8 @@ function posts(state = [], action) {
     case RESET_POSTS:
       return [];
 
-    case VOTE_SUCCESS: {
+    case VOTE_SUCCESS:
+    case DELETE_POST_SUCCESS: {
       const id = get(action, 'payload.id');
 
       if (!id || action.voteType !== 'posts') {
@@ -68,7 +70,8 @@ function currentPost(state = {}, action) {
     case RESET_CURRENT_POST:
       return {};
 
-    case VOTE_SUCCESS: {
+    case VOTE_SUCCESS:
+    case DELETE_POST_SUCCESS: {
       const id = get(action, 'payload.id');
 
       if (!id || action.voteType !== 'posts' || id !== state.id) {

@@ -6,6 +6,7 @@ import Post from './Post';
 
 const Posts = props => {
   const { posts, category } = props;
+  const activePosts = posts.filter(post => !post.deleted);
 
   return (
     <List
@@ -13,7 +14,7 @@ const Posts = props => {
       header={<h2>{category ? capitalize(category) : 'All'} posts</h2>}
       footer={
         <div>
-          {posts.length} {posts.length === 1 ? 'post' : 'posts'}
+          {activePosts.length} {activePosts.length === 1 ? 'post' : 'posts'}
         </div>
       }
       bordered

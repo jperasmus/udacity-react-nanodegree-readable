@@ -33,3 +33,7 @@ export function voteDown(type, id) {
     res => res.json()
   );
 }
+
+export function deletePost(id) {
+  return http(`${API_BASE_URL}/posts/${id}`, { method: 'DELETE' }).then(res => res.json());
+}

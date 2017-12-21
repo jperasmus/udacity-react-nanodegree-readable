@@ -1,13 +1,35 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { List, Avatar, Icon, Tooltip } from 'antd';
+import { connect } from 'react-redux';
+import { List, Avatar, Icon, Tooltip, Modal, message } from 'antd';
 import { Link } from 'react-router-dom';
 import relativeDate from 'relative-date';
 import Voter from './Voter';
+import { deletePost } from '../actions';
+
+const { confirm } = Modal;
 
 class Post extends Component {
+  confirmPostDelete = () => {
+    confirm({
+      title: 'Sure you want to delete this post?',
+      content: 'This action can not be undone',
+      onOk: () => {
+        this.props.deletePost(this.props.id);
+      },
+      onCancel() {
+        // User pressed "Cancel", don't do anything
+      }
+    });
+  };
+
   render() {
-    const { title, body, id, author, voteScore, commentCount, timestamp, category } = this.props;
+    const { title, body, id, author, voteScore, commentCount, timestamp, category, deleted } = this.props;
+
+    if (deleted) {
+      message.info('This post has been deleted');
+      return null;
+    }
 
     return (
       <List.Item
@@ -23,7 +45,7 @@ class Post extends Component {
               <Icon type="edit" />
             </Tooltip>
           </Link>,
-          <a>
+          <a href="#" onClick={() => this.confirmPostDelete()}>
             <Tooltip title="Delete Post">
               <Icon type="delete" />
             </Tooltip>
@@ -58,8 +80,15 @@ Post.propTypes = {
   author: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
   voteScore: PropTypes.number.isRequired,
-  // deleted: PropTypes.bool.isRequired,
-  commentCount: PropTypes.number.isRequired
+  deleted: PropTypes.bool.isRequired,
+  commentCount: PropTypes.number.isRequired,
+  deletePost: PropTypes.func.isRequired
 };
 
-export default Post;
+const mapStateToProps = () => ({});
+
+const mapDispatchToProps = dispatch => ({
+  deletePost: postId => dispatch(deletePost(postId))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Post);
