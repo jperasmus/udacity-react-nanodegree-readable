@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Link } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 
 import NotFound from './NotFound';
@@ -14,7 +14,9 @@ class App extends Component {
       <Layout>
         <Header className="header">
           <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} style={{ lineHeight: '64px' }}>
-            <Menu.Item key="home">Readable</Menu.Item>
+            <Menu.Item key="home">
+              <Link to="/">Readable</Link>
+            </Menu.Item>
           </Menu>
         </Header>
         <Content style={{ padding: '0 50px' }}>
@@ -22,7 +24,7 @@ class App extends Component {
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <Switch>
                 <Route exact path="/" component={Category} />
-                <Route exact path="/category/:category" component={Category} />
+                <Route exact path="/:category" component={Category} />
                 <Route component={NotFound} />
               </Switch>
             </Content>

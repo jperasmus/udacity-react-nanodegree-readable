@@ -62,7 +62,7 @@ class Category extends Component {
                     <Button
                       key={`category_${cat.name}`}
                       type={category === cat.path ? 'primary' : 'default'}
-                      onClick={() => this.routeToCategory(`/category/${cat.path}`)}
+                      onClick={() => this.routeToCategory(`/${cat.path}`)}
                     >
                       {capitalize(cat.name)}
                     </Button>
