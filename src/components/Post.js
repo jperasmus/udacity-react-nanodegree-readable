@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { List, Avatar, Icon } from 'antd';
+import { List, Avatar, Icon, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 import relativeDate from 'relative-date';
 
@@ -13,13 +13,19 @@ class Post extends Component {
         actions={[
           <div>Vote mechanism...</div>,
           <Link to={`/${category}/${id}`}>
-            <Icon type="eye" />
+            <Tooltip title="View Post">
+              <Icon type="eye" />
+            </Tooltip>
           </Link>,
           <Link to={`/${category}/${id}/edit`}>
-            <Icon type="edit" />
+            <Tooltip title="Edit Post">
+              <Icon type="edit" />
+            </Tooltip>
           </Link>,
           <a>
-            <Icon type="delete" />
+            <Tooltip title="Delete Post">
+              <Icon type="delete" />
+            </Tooltip>
           </a>
         ]}
       >
