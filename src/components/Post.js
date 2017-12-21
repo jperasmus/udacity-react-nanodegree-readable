@@ -6,16 +6,16 @@ import relativeDate from 'relative-date';
 
 class Post extends Component {
   render() {
-    const { title, body, id, author, voteScore, commentCount, timestamp } = this.props;
+    const { title, body, id, author, voteScore, commentCount, timestamp, category } = this.props;
 
     return (
       <List.Item
         actions={[
           <div>Vote mechanism...</div>,
-          <Link to={`/post/${id}`}>
+          <Link to={`/${category}/${id}`}>
             <Icon type="eye" />
           </Link>,
-          <Link to={`/post/${id}/edit`}>
+          <Link to={`/${category}/${id}/edit`}>
             <Icon type="edit" />
           </Link>,
           <a>
@@ -26,7 +26,7 @@ class Post extends Component {
         <List.Item.Meta
           avatar={<Avatar src={`https://api.adorable.io/avatars/85/${author}.png`} />}
           title={
-            <Link to={`/post/${id}`}>
+            <Link to={`/${category}/${id}`}>
               {title}{' '}
               <div>
                 <small>
@@ -51,7 +51,7 @@ Post.propTypes = {
   title: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
-  // category: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
   voteScore: PropTypes.number.isRequired,
   // deleted: PropTypes.bool.isRequired,
   commentCount: PropTypes.number.isRequired
