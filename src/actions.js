@@ -1,10 +1,12 @@
 import * as api from './utils/api';
 
+export const META_POSTS_LOADING = 'META_POSTS_LOADING';
 export const META_CURRENT_POST_LOADING = 'META_CURRENT_POST_LOADING';
 export const FETCH_CATEGORIES_SUCCESS = 'FETCH_CATEGORIES_SUCCESS';
 export const FETCH_CATEGORIES_FAILED = 'FETCH_CATEGORIES_FAILED';
 export const FETCH_POSTS_SUCCESS = 'FETCH_POSTS_SUCCESS';
 export const FETCH_POSTS_FAILED = 'FETCH_POSTS_FAILED';
+export const RESET_POSTS = 'RESET_POSTS';
 export const FETCH_POST_SUCCESS = 'FETCH_POST_SUCCESS';
 export const FETCH_POST_FAILED = 'FETCH_POST_FAILED';
 export const RESET_CURRENT_POST = 'RESET_CURRENT_POST';
@@ -12,6 +14,11 @@ export const RESET_CURRENT_POST = 'RESET_CURRENT_POST';
 /** *********
  * APP META *
  ********** */
+export const postsLoading = loading => ({
+  type: META_POSTS_LOADING,
+  loading
+});
+
 export const currentPostLoading = loading => ({
   type: META_CURRENT_POST_LOADING,
   loading
@@ -51,12 +58,25 @@ export const postsFetchFailed = error => ({
   error
 });
 
+export const resetPosts = () => ({
+  type: RESET_POSTS
+});
+
 export function fetchPosts(category) {
-  return dispatch =>
-    api
+  return dispatch => {
+    dispatch(postsLoading(true));
+
+    return api
       .fetchPosts(category)
-      .then(posts => dispatch(postsFetchSuccess(posts)))
-      .catch(error => dispatch(postsFetchFailed(error.message)));
+      .then(posts => {
+        dispatch(postsLoading(false));
+        return dispatch(postsFetchSuccess(posts));
+      })
+      .catch(error => {
+        dispatch(postsLoading(false));
+        return dispatch(postsFetchFailed(error.message));
+      });
+  };
 }
 
 export const currentPostFetchSuccess = post => ({

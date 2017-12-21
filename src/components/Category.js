@@ -7,7 +7,8 @@ import get from 'lodash.get';
 import capitalize from 'lodash.capitalize';
 
 import Posts from './Posts';
-import { fetchCategories, fetchPosts } from '../actions';
+import Loader from './Loader';
+import { fetchCategories, fetchPosts, resetPosts } from '../actions';
 
 class Category extends Component {
   constructor(props) {
@@ -41,6 +42,10 @@ class Category extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.resetPosts();
+  }
+
   filterPostsChange = ({ key }) => {
     message.info(`Click on item ${key}`);
   };
@@ -50,7 +55,7 @@ class Category extends Component {
   };
 
   render() {
-    const { categories, posts, match } = this.props;
+    const { categories, posts, match, postsLoading } = this.props;
     const { category } = match.params;
 
     return (
@@ -89,7 +94,7 @@ class Category extends Component {
           </Layout.Header>
 
           <Layout.Content>
-            <Posts posts={posts} category={category} />
+            {postsLoading ? <Loader text="Loading Posts" /> : <Posts posts={posts} category={category} />}
           </Layout.Content>
         </Layout>
       </div>
@@ -110,16 +115,20 @@ Category.propTypes = {
   match: PropTypes.object.isRequired,
   categories: PropTypes.array,
   posts: PropTypes.array,
+  postsLoading: PropTypes.bool.isRequired,
+  resetPosts: PropTypes.func.isRequired,
   fetchCategories: PropTypes.func.isRequired,
   fetchPosts: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({ categories, posts }) => ({
+const mapStateToProps = ({ categories, posts, meta }) => ({
+  postsLoading: meta.postsLoading,
   categories,
   posts
 });
 
 const mapDispatchToProps = dispatch => ({
+  resetPosts: () => dispatch(resetPosts()),
   fetchCategories: () => dispatch(fetchCategories()),
   fetchPosts: category => dispatch(fetchPosts(category))
 });

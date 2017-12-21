@@ -7,7 +7,9 @@ import {
   FETCH_POSTS_FAILED,
   FETCH_POST_SUCCESS,
   FETCH_POST_FAILED,
+  RESET_POSTS,
   RESET_CURRENT_POST,
+  META_POSTS_LOADING,
   META_CURRENT_POST_LOADING
 } from './actions';
 
@@ -30,6 +32,7 @@ function posts(state = [], action) {
       return [].concat(action.posts);
 
     case FETCH_POSTS_FAILED:
+    case RESET_POSTS:
       return [];
 
     default:
@@ -52,13 +55,16 @@ function currentPost(state = {}, action) {
 }
 
 const appMetaDefaultState = {
+  postsLoading: false,
   currentPostLoading: false
 };
 
 function meta(state = appMetaDefaultState, action) {
   switch (action.type) {
+    case META_POSTS_LOADING:
+      return { ...state, ...{ postsLoading: action.loading } };
+
     case META_CURRENT_POST_LOADING:
-      console.log('META_CURRENT_POST_LOADING', action);
       return { ...state, ...{ currentPostLoading: action.loading } };
 
     default:
