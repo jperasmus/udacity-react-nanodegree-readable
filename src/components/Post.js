@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { List, Avatar, Icon } from 'antd';
 import { Link } from 'react-router-dom';
+import relativeDate from 'relative-date';
 
 class Post extends Component {
   render() {
-    const { title, body, id, author, voteScore, commentCount } = this.props;
+    const { title, body, id, author, voteScore, commentCount, timestamp } = this.props;
 
     return (
       <List.Item
@@ -24,7 +25,16 @@ class Post extends Component {
       >
         <List.Item.Meta
           avatar={<Avatar src={`https://api.adorable.io/avatars/85/${author}.png`} />}
-          title={<Link to={`/post/${id}`}>{title}</Link>}
+          title={
+            <Link to={`/post/${id}`}>
+              {title}{' '}
+              <div>
+                <small>
+                  Posted by <strong>{author}</strong> {relativeDate(timestamp)}
+                </small>
+              </div>
+            </Link>
+          }
           description={body}
         />
         <div>
@@ -41,9 +51,9 @@ Post.propTypes = {
   title: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
-  category: PropTypes.string.isRequired,
+  // category: PropTypes.string.isRequired,
   voteScore: PropTypes.number.isRequired,
-  deleted: PropTypes.bool.isRequired,
+  // deleted: PropTypes.bool.isRequired,
   commentCount: PropTypes.number.isRequired
 };
 

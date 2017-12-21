@@ -1,11 +1,6 @@
 import { combineReducers } from 'redux';
 
-import {
-  FETCH_CATEGORIES_SUCCESS,
-  FETCH_CATEGORIES_FAILED,
-  FETCH_POSTS_SUCCESS,
-  FETCH_POSTS_FAILED
-} from './actions';
+import { FETCH_CATEGORIES_SUCCESS, FETCH_CATEGORIES_FAILED, FETCH_POSTS_SUCCESS, FETCH_POSTS_FAILED } from './actions';
 
 function categories(state = [], action) {
   switch (action.type) {

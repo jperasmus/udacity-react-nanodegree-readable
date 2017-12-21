@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import Button from 'antd/lib/button';
 import { Menu, Dropdown, Icon, message, Layout, Row, Col } from 'antd';
 import get from 'lodash.get';
+import capitalize from 'lodash.capitalize';
 
 import Posts from './Posts';
 
 import { fetchCategories, fetchPosts } from '../actions';
-import { capitalize } from '../utils/helpers';
 
 class Category extends Component {
   constructor(props) {
@@ -30,9 +30,7 @@ class Category extends Component {
     this.props
       .fetchCategories()
       .then(() => this.props.fetchPosts(get(this.props, 'match.params.category')))
-      .catch(error => {
-        message.error(`An error occurred while fetching the posts.\nDetails: ${error}`, 5);
-      });
+      .catch(error => message.error(`An error occurred while fetching the posts.\nDetails: ${error}`, 5));
   }
 
   filterPostsChange = ({ key }) => {
@@ -60,17 +58,15 @@ class Category extends Component {
                     type={!category ? 'primary' : 'default'}
                     icon="home"
                   />
-                  {categories.map(cat => {
-                    return (
-                      <Button
-                        key={`category_${cat.name}`}
-                        type={category === cat.path ? 'primary' : 'default'}
-                        onClick={() => this.routeToCategory(`/category/${cat.path}`)}
-                      >
-                        {capitalize(cat.name)}
-                      </Button>
-                    );
-                  })}
+                  {categories.map(cat => (
+                    <Button
+                      key={`category_${cat.name}`}
+                      type={category === cat.path ? 'primary' : 'default'}
+                      onClick={() => this.routeToCategory(`/category/${cat.path}`)}
+                    >
+                      {capitalize(cat.name)}
+                    </Button>
+                  ))}
                 </Button.Group>
               </Col>
 
@@ -110,18 +106,14 @@ Category.propTypes = {
   fetchPosts: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({ categories, posts }) => {
-  return {
-    categories,
-    posts
-  };
-};
+const mapStateToProps = ({ categories, posts }) => ({
+  categories,
+  posts
+});
 
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchCategories: () => dispatch(fetchCategories()),
-    fetchPosts: category => dispatch(fetchPosts(category))
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  fetchCategories: () => dispatch(fetchCategories()),
+  fetchPosts: category => dispatch(fetchPosts(category))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Category);

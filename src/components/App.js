@@ -1,27 +1,19 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu } from 'antd';
 
 import NotFound from './NotFound';
 import Category from './Category';
 import './App.css';
 
-// const ButtonGroup = Button.Group;
-
-// const { SubMenu } = Menu;
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Footer } = Layout;
 
 class App extends Component {
   render() {
     return (
       <Layout>
         <Header className="header">
-          <Menu
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={['2']}
-            style={{ lineHeight: '64px' }}
-          >
+          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} style={{ lineHeight: '64px' }}>
             <Menu.Item key="home">Readable</Menu.Item>
           </Menu>
         </Header>

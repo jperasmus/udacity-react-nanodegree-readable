@@ -11,7 +11,5 @@ export function fetchCategories() {
 }
 
 export function fetchPosts(category) {
-  return http(`${API_BASE_URL}/${category ? `${category}/posts` : 'posts'}`).then(res =>
-    res.json()
-  );
+  return http(`${API_BASE_URL}/${category ? `${category}/posts` : 'posts'}`).then(res => res.json());
 }
