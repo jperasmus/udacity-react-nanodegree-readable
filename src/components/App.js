@@ -15,7 +15,7 @@ class App extends Component {
   render() {
     return (
       <Layout>
-        <Header className="header">
+        <Header className="header" style={{ position: 'fixed', width: '100%', zIndex: 2 }}>
           <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} style={{ lineHeight: '64px' }}>
             <Menu.Item key="home">
               <Link to="/">
@@ -29,7 +29,7 @@ class App extends Component {
             </Menu.Item>
           </Menu>
         </Header>
-        <Content style={{ padding: '0 50px' }}>
+        <Content style={{ padding: '0 50px', marginTop: 64, marginBottom: 70, height: 'calc(100vh - 134px)' }}>
           <Layout style={{ padding: '24px 0', background: '#fff' }}>
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <Switch>
@@ -43,7 +43,7 @@ class App extends Component {
             </Content>
           </Layout>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
+        <Footer style={{ textAlign: 'center', position: 'fixed', width: '100%', zIndex: 2, bottom: 0 }}>
           Readable © 2017 Created by{' '}
           <a href="https://jperasmus.me" target="_blank" rel="noopener noreferrer">
             JP Erasmus
