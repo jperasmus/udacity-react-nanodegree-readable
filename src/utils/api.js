@@ -22,6 +22,10 @@ export function fetchCurrentPost(postId) {
   return http(`${API_BASE_URL}/posts/${postId}`).then(res => res.json());
 }
 
+export function fetchCurrentPostComments(postId) {
+  return http(`${API_BASE_URL}/posts/${postId}/comments`).then(res => res.json());
+}
+
 export function voteUp(type, id) {
   return http(`${API_BASE_URL}/${type}/${id}`, { method: 'POST', body: JSON.stringify({ option: 'upVote' }) }).then(
     res => res.json()
@@ -36,6 +40,10 @@ export function voteDown(type, id) {
 
 export function deletePost(id) {
   return http(`${API_BASE_URL}/posts/${id}`, { method: 'DELETE' }).then(res => res.json());
+}
+
+export function deleteComment(id) {
+  return http(`${API_BASE_URL}/comments/${id}`, { method: 'DELETE' }).then(res => res.json());
 }
 
 export function addPost(payload) {

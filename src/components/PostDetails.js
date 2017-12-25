@@ -8,14 +8,16 @@ import get from 'lodash.get';
 import capitalize from 'lodash.capitalize';
 import Loader from './Loader';
 import Voter from './Voter';
-import { fetchCurrentPost, resetCurrentPost, deletePost } from '../actions';
+import Comments from './Comments';
+import { fetchCurrentPost, fetchCurrentPostComments, resetCurrentPost, deletePost } from '../actions';
 
 const { Content, Sider } = Layout;
 const { confirm } = Modal;
 
 class PostDetails extends Component {
   componentDidMount() {
-    this.props.fetchCurrentPost(get(this.props.match, 'params.post_id'));
+    const postId = get(this.props.match, 'params.post_id');
+    this.props.fetchCurrentPost(postId).then(() => this.props.fetchCurrentPostComments(postId));
   }
 
   componentWillUnmount() {
@@ -38,15 +40,16 @@ class PostDetails extends Component {
   render() {
     const {
       currentPostLoading,
+      currentPostCommentsLoading,
       title,
       body,
       id,
       author,
       voteScore,
-      commentCount,
       timestamp,
       category,
-      deleted
+      deleted,
+      comments
     } = this.props;
 
     if (deleted) {
@@ -74,7 +77,7 @@ class PostDetails extends Component {
           <Sider style={{ background: 'white' }}>
             <Voter id={id} type="posts" voteScore={voteScore} size="large" />
           </Sider>
-          <Content>
+          <Content style={{ background: 'white' }}>
             <Card
               title={title}
               extra={
@@ -98,9 +101,7 @@ class PostDetails extends Component {
               <p>{body}</p>
             </Card>
 
-            <Layout>
-              <Content>Comments Component Placeholder ({commentCount})</Content>
-            </Layout>
+            {currentPostCommentsLoading ? <Loader text="Loading Post Comments" /> : <Comments comments={comments} />}
           </Content>
           <Sider style={{ background: 'white' }} />
         </Layout>
@@ -118,13 +119,15 @@ PostDetails.defaultProps = {
   category: '',
   voteScore: 0,
   deleted: false,
-  commentCount: 0
+  comments: []
 };
 
 PostDetails.propTypes = {
   match: PropTypes.object.isRequired,
   currentPostLoading: PropTypes.bool.isRequired,
+  currentPostCommentsLoading: PropTypes.bool.isRequired,
   fetchCurrentPost: PropTypes.func.isRequired,
+  fetchCurrentPostComments: PropTypes.func.isRequired,
   resetCurrentPost: PropTypes.func.isRequired,
   deletePost: PropTypes.func.isRequired,
   id: PropTypes.string,
@@ -135,17 +138,19 @@ PostDetails.propTypes = {
   category: PropTypes.string,
   voteScore: PropTypes.number,
   deleted: PropTypes.bool,
-  commentCount: PropTypes.number
+  comments: PropTypes.array
 };
 
 const mapStateToProps = ({ currentPost, meta }) => ({
   currentPostLoading: meta.currentPostLoading,
+  currentPostCommentsLoading: meta.currentPostCommentsLoading,
   ...currentPost
 });
 
 const mapDispatchToProps = dispatch => ({
   resetCurrentPost: () => dispatch(resetCurrentPost()),
   fetchCurrentPost: postId => dispatch(fetchCurrentPost(postId)),
+  fetchCurrentPostComments: postId => dispatch(fetchCurrentPostComments(postId)),
   deletePost: postId => dispatch(deletePost(postId))
 });
 

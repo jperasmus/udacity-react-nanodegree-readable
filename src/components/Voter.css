@@ -6,7 +6,6 @@
   opacity: 1;
   padding: 0 8px;
   width: 100%;
-  flex-direction: column;
 }
 
 .voter > i {
@@ -20,6 +19,10 @@
 .voter > span {
   font-weight: bold;
   padding: 5px;
+}
+
+.voter.large {
+  flex-direction: column;
 }
 
 .voter.large > i,

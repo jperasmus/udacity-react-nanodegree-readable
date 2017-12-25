@@ -8,16 +8,21 @@ import {
   FETCH_POSTS_FAILED,
   FETCH_POST_SUCCESS,
   FETCH_POST_FAILED,
+  FETCH_POST_COMMENTS_SUCCESS,
+  FETCH_POST_COMMENTS_FAILED,
   RESET_POSTS,
   RESET_CURRENT_POST,
   DELETE_POST_SUCCESS,
+  DELETE_COMMENT_SUCCESS,
   ADD_POST_SUCCESS,
   EDIT_POST_SUCCESS,
   VOTE_SUCCESS,
   META_CATEGORIES_LOADING,
   META_POSTS_LOADING,
   META_CURRENT_POST_LOADING,
-  META_VOTE_LOADING
+  META_CURRENT_POST_COMMENTS_LOADING,
+  META_VOTE_LOADING,
+  DELETE_COMMENT_FAILED
 } from './actions';
 
 function categories(state = [], action) {
@@ -95,6 +100,34 @@ function currentPost(state = {}, action) {
       return action.payload;
     }
 
+    case DELETE_COMMENT_SUCCESS: {
+      const id = get(action, 'payload.id');
+
+      if (!id || action.voteType !== 'comments' || !state.comments.some(comment => comment.id === id)) {
+        return state;
+      }
+
+      return {
+        ...state,
+        ...{
+          comments: state.comments.map(comment => {
+            if (comment.id === id) {
+              return action.payload;
+            }
+
+            return comment;
+          })
+        }
+      };
+    }
+
+    case FETCH_POST_COMMENTS_SUCCESS:
+      return { ...state, ...{ comments: action.comments } };
+
+    case FETCH_POST_COMMENTS_FAILED:
+      return { ...state, ...{ comments: [] } };
+
+    case DELETE_COMMENT_FAILED:
     default:
       return state;
   }
@@ -104,6 +137,7 @@ const appMetaDefaultState = {
   categoriesLoading: true,
   postsLoading: false,
   currentPostLoading: false,
+  currentPostCommentsLoading: false,
   voteLoading: false
 };
 
@@ -117,6 +151,9 @@ function meta(state = appMetaDefaultState, action) {
 
     case META_CURRENT_POST_LOADING:
       return { ...state, ...{ currentPostLoading: action.loading } };
+
+    case META_CURRENT_POST_COMMENTS_LOADING:
+      return { ...state, ...{ currentPostCommentsLoading: action.loading } };
 
     case META_VOTE_LOADING:
       return { ...state, ...{ voteLoading: action.loading } };
