@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Layout, Menu, Icon, message } from 'antd';
-import Loader from './Loader';
 import { fetchCategories } from '../actions';
-
+import Loader from './Loader';
 import NotFound from './NotFound';
 import Category from './Category';
 import AddEditPost from './AddEditPost';
@@ -48,9 +47,9 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={Category} />
                 <Route exact path="/add-post" component={AddEditPost} />
-                <Route exact path="/:category" component={Category} />
                 <Route exact path="/:category/:post_id/edit" component={AddEditPost} />
                 <Route exact path="/:category/:post_id" component={PostDetails} />
+                <Route exact path="/:category" component={Category} />
                 <Route component={NotFound} />
               </Switch>
             </Content>

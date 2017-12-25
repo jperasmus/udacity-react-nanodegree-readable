@@ -11,6 +11,8 @@ import {
   RESET_POSTS,
   RESET_CURRENT_POST,
   DELETE_POST_SUCCESS,
+  ADD_POST_SUCCESS,
+  EDIT_POST_SUCCESS,
   VOTE_SUCCESS,
   META_CATEGORIES_LOADING,
   META_POSTS_LOADING,
@@ -41,6 +43,7 @@ function posts(state = [], action) {
       return [];
 
     case VOTE_SUCCESS:
+    case EDIT_POST_SUCCESS:
     case DELETE_POST_SUCCESS: {
       const id = get(action, 'payload.id');
 
@@ -55,6 +58,16 @@ function posts(state = [], action) {
 
         return post;
       });
+    }
+
+    case ADD_POST_SUCCESS: {
+      const id = get(action, 'payload.id');
+
+      if (!id) {
+        return state;
+      }
+
+      return state.concat(action.payload);
     }
 
     default:

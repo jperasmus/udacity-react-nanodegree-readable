@@ -18,6 +18,10 @@ export const VOTE_DOWN_SUCCESS = 'VOTE_DOWN_SUCCESS';
 export const VOTE_DOWN_FAILED = 'VOTE_DOWN_FAILED';
 export const DELETE_POST_SUCCESS = 'DELETE_POST_SUCCESS';
 export const DELETE_POST_FAILED = 'DELETE_POST_FAILED';
+export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
+export const ADD_POST_FAILED = 'ADD_POST_FAILED';
+export const EDIT_POST_SUCCESS = 'EDIT_POST_SUCCESS';
+export const EDIT_POST_FAILED = 'EDIT_POST_FAILED';
 
 /** *********
  * APP META *
@@ -153,6 +157,43 @@ export function deletePost(postId) {
       .deletePost(postId)
       .then(post => dispatch(postDeleteSuccess(post)))
       .catch(error => dispatch(postDeleteFailed(error.message)));
+}
+
+export const postAddSuccess = payload => ({
+  type: ADD_POST_SUCCESS,
+  payload
+});
+
+export const postAddFailed = error => ({
+  type: ADD_POST_FAILED,
+  error
+});
+
+export function addPost(payload) {
+  return dispatch =>
+    api
+      .addPost(payload)
+      .then(post => dispatch(postAddSuccess(post)))
+      .catch(error => dispatch(postAddFailed(error.message)));
+}
+
+export const postEditSuccess = payload => ({
+  type: EDIT_POST_SUCCESS,
+  voteType: 'posts',
+  payload
+});
+
+export const postEditFailed = error => ({
+  type: EDIT_POST_FAILED,
+  error
+});
+
+export function editPost(payload) {
+  return dispatch =>
+    api
+      .editPost(payload)
+      .then(post => dispatch(postEditSuccess(post)))
+      .catch(error => dispatch(postEditFailed(error.message)));
 }
 
 /** ******

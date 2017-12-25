@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Layout, Card, Icon, Tooltip, Alert, Modal } from 'antd';
+import { Layout, Card, Icon, Tooltip, Alert, Modal, Breadcrumb } from 'antd';
 import { Link } from 'react-router-dom';
 import relativeDate from 'relative-date';
 import get from 'lodash.get';
+import capitalize from 'lodash.capitalize';
 import Loader from './Loader';
 import Voter from './Voter';
 import { fetchCurrentPost, resetCurrentPost, deletePost } from '../actions';
@@ -57,40 +58,53 @@ class PostDetails extends Component {
     }
 
     return (
-      <Layout>
-        <Sider style={{ background: 'white' }}>
-          <Voter id={id} type="posts" voteScore={voteScore} size="large" />
-        </Sider>
-        <Content>
-          <Card
-            title={title}
-            extra={
-              <small>
-                Posted by <strong>{author}</strong> {relativeDate(timestamp)}
-              </small>
-            }
-            actions={[
-              <Link to={`/${category}/${id}/edit`}>
-                <Tooltip title="Edit Post">
-                  <Icon type="edit" />
-                </Tooltip>
-              </Link>,
-              <a href="#" onClick={() => this.confirmPostDelete()}>
-                <Tooltip title="Delete Post">
-                  <Icon type="delete" />
-                </Tooltip>
-              </a>
-            ]}
-          >
-            <p>{body}</p>
-          </Card>
+      <div>
+        <Breadcrumb style={{ marginBottom: 30 }}>
+          <Breadcrumb.Item>
+            <Link to="/">
+              <Icon type="home" />
+            </Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Link to={`/${category}`}>{capitalize(category)}</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>{title}</Breadcrumb.Item>
+        </Breadcrumb>
+        <Layout>
+          <Sider style={{ background: 'white' }}>
+            <Voter id={id} type="posts" voteScore={voteScore} size="large" />
+          </Sider>
+          <Content>
+            <Card
+              title={title}
+              extra={
+                <small>
+                  Posted by <strong>{author}</strong> {relativeDate(timestamp)}
+                </small>
+              }
+              actions={[
+                <Link to={`/${category}/${id}/edit`}>
+                  <Tooltip title="Edit Post">
+                    <Icon type="edit" />
+                  </Tooltip>
+                </Link>,
+                <a href="#" onClick={() => this.confirmPostDelete()}>
+                  <Tooltip title="Delete Post">
+                    <Icon type="delete" />
+                  </Tooltip>
+                </a>
+              ]}
+            >
+              <p>{body}</p>
+            </Card>
 
-          <Layout>
-            <Content>Comments Component Placeholder ({commentCount})</Content>
-          </Layout>
-        </Content>
-        <Sider style={{ background: 'white' }} />
-      </Layout>
+            <Layout>
+              <Content>Comments Component Placeholder ({commentCount})</Content>
+            </Layout>
+          </Content>
+          <Sider style={{ background: 'white' }} />
+        </Layout>
+      </div>
     );
   }
 }

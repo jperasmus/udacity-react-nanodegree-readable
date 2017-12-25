@@ -37,3 +37,16 @@ export function voteDown(type, id) {
 export function deletePost(id) {
   return http(`${API_BASE_URL}/posts/${id}`, { method: 'DELETE' }).then(res => res.json());
 }
+
+export function addPost(payload) {
+  const body = { ...payload, id: btoa(Date.now()), timestamp: Date.now() };
+  return http(`${API_BASE_URL}/posts`, { method: 'POST', body: JSON.stringify(body) }).then(res => res.json());
+}
+
+export function editPost(payload) {
+  const { id } = payload;
+  const body = { ...payload };
+  delete body.id;
+
+  return http(`${API_BASE_URL}/posts/${id}`, { method: 'PUT', body: JSON.stringify(body) }).then(res => res.json());
+}
