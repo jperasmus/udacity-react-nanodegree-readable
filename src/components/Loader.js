@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Row, Col, Spin } from 'antd';
 
 const Loader = props => (
-  <div>
+  <div style={{ marginTop: 15 }}>
     <Row type="flex" justify="center" align="middle">
       <Col>
         <Spin />

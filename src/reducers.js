@@ -12,6 +12,7 @@ import {
   RESET_CURRENT_POST,
   DELETE_POST_SUCCESS,
   VOTE_SUCCESS,
+  META_CATEGORIES_LOADING,
   META_POSTS_LOADING,
   META_CURRENT_POST_LOADING,
   META_VOTE_LOADING
@@ -87,6 +88,7 @@ function currentPost(state = {}, action) {
 }
 
 const appMetaDefaultState = {
+  categoriesLoading: true,
   postsLoading: false,
   currentPostLoading: false,
   voteLoading: false
@@ -94,6 +96,9 @@ const appMetaDefaultState = {
 
 function meta(state = appMetaDefaultState, action) {
   switch (action.type) {
+    case META_CATEGORIES_LOADING:
+      return { ...state, ...{ categoriesLoading: action.loading } };
+
     case META_POSTS_LOADING:
       return { ...state, ...{ postsLoading: action.loading } };
 

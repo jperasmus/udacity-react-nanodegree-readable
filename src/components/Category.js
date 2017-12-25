@@ -8,7 +8,7 @@ import capitalize from 'lodash.capitalize';
 
 import Posts from './Posts';
 import Loader from './Loader';
-import { fetchCategories, fetchPosts, resetPosts } from '../actions';
+import { fetchPosts, resetPosts } from '../actions';
 
 class Category extends Component {
   constructor(props) {
@@ -28,8 +28,7 @@ class Category extends Component {
 
   componentDidMount() {
     this.props
-      .fetchCategories()
-      .then(() => this.props.fetchPosts(get(this.props, 'match.params.category')))
+      .fetchPosts(get(this.props, 'match.params.category'))
       .catch(error => message.error(`An error occurred while fetching the posts.\nDetails: ${error}`, 5));
   }
 
@@ -117,7 +116,6 @@ Category.propTypes = {
   posts: PropTypes.array,
   postsLoading: PropTypes.bool.isRequired,
   resetPosts: PropTypes.func.isRequired,
-  fetchCategories: PropTypes.func.isRequired,
   fetchPosts: PropTypes.func.isRequired
 };
 
@@ -129,7 +127,6 @@ const mapStateToProps = ({ categories, posts, meta }) => ({
 
 const mapDispatchToProps = dispatch => ({
   resetPosts: () => dispatch(resetPosts()),
-  fetchCategories: () => dispatch(fetchCategories()),
   fetchPosts: category => dispatch(fetchPosts(category))
 });
 

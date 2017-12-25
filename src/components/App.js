@@ -1,18 +1,31 @@
 import React, { Component } from 'react';
-import { Route, Switch, Link } from 'react-router-dom';
-import { Layout, Menu, Icon } from 'antd';
+import PropTypes from 'prop-types';
+import { Route, Switch, Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Layout, Menu, Icon, message } from 'antd';
+import Loader from './Loader';
+import { fetchCategories } from '../actions';
 
 import NotFound from './NotFound';
 import Category from './Category';
-import NewPost from './NewPost';
-import EditPost from './EditPost';
+import AddEditPost from './AddEditPost';
 import PostDetails from './PostDetails';
 import './App.css';
 
 const { Header, Content, Footer } = Layout;
 
 class App extends Component {
+  componentDidMount() {
+    this.props
+      .fetchCategories()
+      .catch(error => message.error(`An error occurred while fetching the categories.\nDetails: ${error}`, 5));
+  }
+
   render() {
+    if (this.props.categoriesLoading) {
+      return <Loader text="Loading Categories" />;
+    }
+
     return (
       <Layout>
         <Header className="header" style={{ position: 'fixed', width: '100%', zIndex: 2 }}>
@@ -34,9 +47,9 @@ class App extends Component {
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <Switch>
                 <Route exact path="/" component={Category} />
-                <Route exact path="/add-post" component={NewPost} />
+                <Route exact path="/add-post" component={AddEditPost} />
                 <Route exact path="/:category" component={Category} />
-                <Route exact path="/:category/:post_id/edit" component={EditPost} />
+                <Route exact path="/:category/:post_id/edit" component={AddEditPost} />
                 <Route exact path="/:category/:post_id" component={PostDetails} />
                 <Route component={NotFound} />
               </Switch>
@@ -54,4 +67,17 @@ class App extends Component {
   }
 }
 
-export default App;
+App.propTypes = {
+  categoriesLoading: PropTypes.bool.isRequired,
+  fetchCategories: PropTypes.func.isRequired
+};
+
+const mapStateToProps = ({ meta }) => ({
+  categoriesLoading: meta.categoriesLoading
+});
+
+const mapDispatchToProps = dispatch => ({
+  fetchCategories: () => dispatch(fetchCategories())
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

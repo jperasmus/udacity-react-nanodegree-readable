@@ -1,5 +1,6 @@
 import * as api from './utils/api';
 
+export const META_CATEGORIES_LOADING = 'META_CATEGORIES_LOADING';
 export const META_POSTS_LOADING = 'META_POSTS_LOADING';
 export const META_CURRENT_POST_LOADING = 'META_CURRENT_POST_LOADING';
 export const META_VOTE_LOADING = 'META_VOTE_LOADING';
@@ -21,6 +22,11 @@ export const DELETE_POST_FAILED = 'DELETE_POST_FAILED';
 /** *********
  * APP META *
  ********** */
+export const categoriesLoading = loading => ({
+  type: META_CATEGORIES_LOADING,
+  loading
+});
+
 export const postsLoading = loading => ({
   type: META_POSTS_LOADING,
   loading
@@ -50,11 +56,19 @@ export const categoriesFetchFailed = error => ({
 });
 
 export function fetchCategories() {
-  return dispatch =>
-    api
+  return dispatch => {
+    dispatch(categoriesLoading(true));
+    return api
       .fetchCategories()
-      .then(categories => dispatch(categoriesFetchSuccess(categories)))
-      .catch(error => dispatch(categoriesFetchFailed(error.message)));
+      .then(categories => {
+        dispatch(categoriesLoading(false));
+        return dispatch(categoriesFetchSuccess(categories));
+      })
+      .catch(error => {
+        dispatch(categoriesLoading(false));
+        return dispatch(categoriesFetchFailed(error.message));
+      });
+  };
 }
 
 /** ******
