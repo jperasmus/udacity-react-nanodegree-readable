@@ -93,8 +93,27 @@ function currentPost(state = {}, action) {
     case DELETE_POST_SUCCESS: {
       const id = get(action, 'payload.id');
 
-      if (!id || action.voteType !== 'posts' || id !== state.id) {
+      if (!id) {
         return state;
+      }
+
+      if (action.voteType === 'posts' && id !== state.id) {
+        return state;
+      }
+
+      if (action.voteType === 'comments') {
+        return {
+          ...state,
+          ...{
+            comments: state.comments.map(comment => {
+              if (comment.id === id) {
+                return action.payload;
+              }
+
+              return comment;
+            })
+          }
+        };
       }
 
       return action.payload;
