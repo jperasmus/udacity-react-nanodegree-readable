@@ -27,6 +27,8 @@ export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILED = 'ADD_POST_FAILED';
 export const EDIT_POST_SUCCESS = 'EDIT_POST_SUCCESS';
 export const EDIT_POST_FAILED = 'EDIT_POST_FAILED';
+export const EDIT_COMMENT_SUCCESS = 'EDIT_COMMENT_SUCCESS';
+export const EDIT_COMMENT_FAILED = 'EDIT_COMMENT_FAILED';
 
 /** *********
  * APP META *
@@ -253,6 +255,25 @@ export function deleteComment(commentId) {
       .deleteComment(commentId)
       .then(comment => dispatch(commentDeleteSuccess(comment)))
       .catch(error => dispatch(commentDeleteFailed(error.message)));
+}
+
+export const commentEditSuccess = payload => ({
+  type: EDIT_COMMENT_SUCCESS,
+  voteType: 'comments',
+  payload
+});
+
+export const commentEditFailed = error => ({
+  type: EDIT_COMMENT_FAILED,
+  error
+});
+
+export function editComment(payload) {
+  return dispatch =>
+    api
+      .editComment(payload)
+      .then(comment => dispatch(commentEditSuccess(comment)))
+      .catch(error => dispatch(commentEditFailed(error.message)));
 }
 
 /** ******

@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { List, Avatar, Icon, Tooltip, Modal, message } from 'antd';
+import { List, Avatar, Icon, Tooltip, Modal, message, Button } from 'antd';
 import relativeDate from 'relative-date';
 import Voter from './Voter';
-import { deleteComment } from '../actions';
+import { deleteComment, editComment } from '../actions';
 
 const { confirm } = Modal;
 
 class Comment extends Component {
-  confirmPostDelete = () => {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showEditModal: false
+    };
+  }
+
+  confirmCommentDelete = () => {
     confirm({
       title: 'Sure you want to delete this comment?',
       content: 'This action can not be undone',
@@ -20,6 +28,10 @@ class Comment extends Component {
         // User pressed "Cancel", don't do anything
       }
     });
+  };
+
+  showEditModal = () => {
+    //
   };
 
   render() {
@@ -34,12 +46,12 @@ class Comment extends Component {
       <List.Item
         actions={[
           <Voter id={id} type="comments" voteScore={voteScore} />,
-          <a href="#" onClick={() => this.confirmPostDelete()}>
+          <a href="#" onClick={() => this.showEditModal()}>
             <Tooltip title="Edit Comment">
               <Icon type="edit" />
             </Tooltip>
           </a>,
-          <a href="#" onClick={() => this.confirmPostDelete()}>
+          <a href="#" onClick={() => this.confirmCommentDelete()}>
             <Tooltip title="Delete Comment">
               <Icon type="delete" />
             </Tooltip>
@@ -57,6 +69,26 @@ class Comment extends Component {
           }
           description={body}
         />
+        <Modal
+          visible={this.state.showEditModal}
+          title="Title"
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          footer={[
+            <Button key="back" onClick={this.handleCancel}>
+              Return
+            </Button>,
+            <Button key="submit" type="primary" onClick={this.handleOk}>
+              Submit
+            </Button>
+          ]}
+        >
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+        </Modal>
       </List.Item>
     );
   }
@@ -70,12 +102,14 @@ Comment.propTypes = {
   voteScore: PropTypes.number.isRequired,
   deleted: PropTypes.bool.isRequired,
   deleteComment: PropTypes.func.isRequired
+  // editComment: PropTypes.func.isRequired
 };
 
 const mapStateToProps = () => ({});
 
 const mapDispatchToProps = dispatch => ({
-  deleteComment: commentId => dispatch(deleteComment(commentId))
+  deleteComment: commentId => dispatch(deleteComment(commentId)),
+  editComment: payload => dispatch(editComment(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Comment);

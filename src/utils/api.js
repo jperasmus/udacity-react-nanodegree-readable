@@ -58,3 +58,11 @@ export function editPost(payload) {
 
   return http(`${API_BASE_URL}/posts/${id}`, { method: 'PUT', body: JSON.stringify(body) }).then(res => res.json());
 }
+
+export function editComment(payload) {
+  const { id } = payload;
+  const body = { ...payload };
+  delete body.id;
+
+  return http(`${API_BASE_URL}/comments/${id}`, { method: 'PUT', body: JSON.stringify(body) }).then(res => res.json());
+}

@@ -16,6 +16,7 @@ import {
   DELETE_COMMENT_SUCCESS,
   ADD_POST_SUCCESS,
   EDIT_POST_SUCCESS,
+  EDIT_COMMENT_SUCCESS,
   VOTE_SUCCESS,
   META_CATEGORIES_LOADING,
   META_POSTS_LOADING,
@@ -90,6 +91,7 @@ function currentPost(state = {}, action) {
       return {};
 
     case VOTE_SUCCESS:
+    case EDIT_COMMENT_SUCCESS:
     case DELETE_POST_SUCCESS: {
       const id = get(action, 'payload.id');
 
