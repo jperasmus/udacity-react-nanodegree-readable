@@ -1,6 +1,6 @@
 const API_USERNAME = process.env.REACT_APP_API_USERNAME || 'ANYTHING';
 const API_PASSWORD = process.env.REACT_APP_API_PASSWORD || '';
-const API_BASE_URL = process.env.REACT_API_BASE_URL || 'http://localhost:3001';
+const API_BASE_URL = process.env.REACT_API_BASE_URL || 'https://reddit-clone-server-jopzxlqqzy.now.sh';
 
 const http = (url, options = {}) =>
   fetch(url, {
