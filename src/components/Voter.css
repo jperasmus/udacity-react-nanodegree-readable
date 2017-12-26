@@ -29,3 +29,8 @@
 .voter.large > span {
   font-size: 26px;
 }
+
+.voter.disabled-voter {
+  opacity: 0.25;
+  pointer-events: none;
+}
