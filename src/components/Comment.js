@@ -15,7 +15,7 @@ class Comment extends Component {
 
     this.state = {
       showEditModal: false,
-      comment: props.body
+      editComment: props.body
     };
   }
 
@@ -37,7 +37,7 @@ class Comment extends Component {
   };
 
   handleEditOk = () => {
-    this.props.editComment({ body: this.state.comment, id: this.props.id }).then(() => {
+    this.props.editComment({ body: this.state.editComment, id: this.props.id }).then(() => {
       message.success('Comment successfully updated!');
       this.setState({ showEditModal: false });
     });
@@ -47,8 +47,8 @@ class Comment extends Component {
     this.setState({ showEditModal: false });
   };
 
-  handleCommentChange = event => {
-    this.setState({ comment: event.target.value });
+  handleCommentEditChange = event => {
+    this.setState({ editComment: event.target.value });
   };
 
   render() {
@@ -103,8 +103,8 @@ class Comment extends Component {
           <TextArea
             placeholder=""
             autosize={{ minRows: 2, maxRows: 4 }}
-            onChange={this.handleCommentChange}
-            value={this.state.comment}
+            onChange={this.handleCommentEditChange}
+            value={this.state.editComment}
           />
         </Modal>
       </List.Item>

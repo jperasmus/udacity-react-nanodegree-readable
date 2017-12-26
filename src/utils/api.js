@@ -66,3 +66,8 @@ export function editComment(payload) {
 
   return http(`${API_BASE_URL}/comments/${id}`, { method: 'PUT', body: JSON.stringify(body) }).then(res => res.json());
 }
+
+export function addComment(payload) {
+  const body = { ...payload, id: btoa(Date.now()), timestamp: Date.now() };
+  return http(`${API_BASE_URL}/comments`, { method: 'POST', body: JSON.stringify(body) }).then(res => res.json());
+}

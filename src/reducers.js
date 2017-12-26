@@ -17,6 +17,8 @@ import {
   ADD_POST_SUCCESS,
   EDIT_POST_SUCCESS,
   EDIT_COMMENT_SUCCESS,
+  ADD_COMMENT_SUCCESS,
+  ADD_COMMENT_FAILED,
   VOTE_SUCCESS,
   META_CATEGORIES_LOADING,
   META_POSTS_LOADING,
@@ -118,7 +120,7 @@ function currentPost(state = {}, action) {
         };
       }
 
-      return action.payload;
+      return { ...action.payload, comments: state.comments };
     }
 
     case DELETE_COMMENT_SUCCESS: {
@@ -142,6 +144,14 @@ function currentPost(state = {}, action) {
       };
     }
 
+    case ADD_COMMENT_SUCCESS:
+      return {
+        ...state,
+        ...{
+          comments: state.comments.concat(action.payload)
+        }
+      };
+
     case FETCH_POST_COMMENTS_SUCCESS:
       return { ...state, ...{ comments: action.comments } };
 
@@ -149,6 +159,7 @@ function currentPost(state = {}, action) {
       return { ...state, ...{ comments: [] } };
 
     case DELETE_COMMENT_FAILED:
+    case ADD_COMMENT_FAILED:
     default:
       return state;
   }

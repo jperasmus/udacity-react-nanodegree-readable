@@ -61,7 +61,7 @@ class PostDetails extends Component {
     }
 
     return (
-      <div>
+      <div style={{ marginBottom: 64 }}>
         <Breadcrumb style={{ marginBottom: 30 }}>
           <Breadcrumb.Item>
             <Link to="/">
@@ -101,7 +101,11 @@ class PostDetails extends Component {
               <p>{body}</p>
             </Card>
 
-            {currentPostCommentsLoading ? <Loader text="Loading Post Comments" /> : <Comments comments={comments} />}
+            {currentPostCommentsLoading ? (
+              <Loader text="Loading Post Comments" />
+            ) : (
+              <Comments comments={comments} postId={id} />
+            )}
           </Content>
           <Sider style={{ background: 'white' }} />
         </Layout>
