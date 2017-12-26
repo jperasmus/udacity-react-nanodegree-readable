@@ -41,8 +41,8 @@ class App extends Component {
             </Menu.Item>
           </Menu>
         </Header>
-        <Content style={{ padding: '0 50px', marginTop: 64, marginBottom: 70, height: 'calc(100vh - 134px)' }}>
-          <Layout style={{ padding: '24px 0', background: '#fff' }}>
+        <Content style={{ padding: '0 50px', marginTop: 64, minHeight: 'calc(100vh - 134px)' }}>
+          <Layout style={{ padding: '24px 0', background: '#fff', marginBottom: 64 }}>
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
               <Switch>
                 <Route exact path="/" component={Category} />

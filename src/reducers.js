@@ -25,6 +25,8 @@ import {
   META_CURRENT_POST_LOADING,
   META_CURRENT_POST_COMMENTS_LOADING,
   META_VOTE_LOADING,
+  META_POST_SORT_BY,
+  META_POST_SORT_DIRECTION,
   DELETE_COMMENT_FAILED
 } from './actions';
 
@@ -170,7 +172,9 @@ const appMetaDefaultState = {
   postsLoading: false,
   currentPostLoading: false,
   currentPostCommentsLoading: false,
-  voteLoading: false
+  voteLoading: false,
+  postsSortBy: 'timestamp',
+  postsSortDirection: 'ascending'
 };
 
 function meta(state = appMetaDefaultState, action) {
@@ -189,6 +193,12 @@ function meta(state = appMetaDefaultState, action) {
 
     case META_VOTE_LOADING:
       return { ...state, ...{ voteLoading: action.loading } };
+
+    case META_POST_SORT_BY:
+      return { ...state, ...{ postsSortBy: action.value } };
+
+    case META_POST_SORT_DIRECTION:
+      return { ...state, ...{ postsSortDirection: action.value } };
 
     default:
       return state;

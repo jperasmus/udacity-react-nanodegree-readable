@@ -5,6 +5,8 @@ export const META_POSTS_LOADING = 'META_POSTS_LOADING';
 export const META_CURRENT_POST_COMMENTS_LOADING = 'META_CURRENT_POST_COMMENTS_LOADING';
 export const META_CURRENT_POST_LOADING = 'META_CURRENT_POST_LOADING';
 export const META_VOTE_LOADING = 'META_VOTE_LOADING';
+export const META_POST_SORT_BY = 'META_POST_SORT_BY';
+export const META_POST_SORT_DIRECTION = 'META_POST_SORT_DIRECTION';
 export const FETCH_CATEGORIES_SUCCESS = 'FETCH_CATEGORIES_SUCCESS';
 export const FETCH_CATEGORIES_FAILED = 'FETCH_CATEGORIES_FAILED';
 export const FETCH_POSTS_SUCCESS = 'FETCH_POSTS_SUCCESS';
@@ -58,6 +60,16 @@ export const currentPostCommentsLoading = loading => ({
 export const voteLoading = loading => ({
   type: META_VOTE_LOADING,
   loading
+});
+
+export const updatePostSortBy = value => ({
+  type: META_POST_SORT_BY,
+  value
+});
+
+export const updatePostSortDirection = value => ({
+  type: META_POST_SORT_DIRECTION,
+  value
 });
 
 /** ***********

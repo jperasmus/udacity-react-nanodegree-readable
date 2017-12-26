@@ -5,27 +5,18 @@ import Button from 'antd/lib/button';
 import { Menu, Dropdown, Icon, message, Layout, Row, Col } from 'antd';
 import get from 'lodash.get';
 import capitalize from 'lodash.capitalize';
-
 import Posts from './Posts';
 import Loader from './Loader';
-import { fetchPosts, resetPosts } from '../actions';
+import { fetchPosts, resetPosts, updatePostSortBy, updatePostSortDirection } from '../actions';
+
+const SORT_BY_MAP = {
+  voteScore: 'Vote score',
+  timestamp: 'Recently Added',
+  title: 'Title',
+  commentCount: 'Number of Comments'
+};
 
 class Category extends Component {
-  constructor(props) {
-    super(props);
-
-    this.menu = (
-      <Menu onClick={this.filterPostsChange}>
-        <Menu.Item key="voteScore_asc">Vote score (smallest first)</Menu.Item>
-        <Menu.Item key="voteScore_desc">Vote score (biggest first)</Menu.Item>
-        <Menu.Item key="timestamp_asc">Date (earliest)</Menu.Item>
-        <Menu.Item key="timestamp_desc">Date (latest)</Menu.Item>
-        <Menu.Item key="title_asc">Title (a-z)</Menu.Item>
-        <Menu.Item key="title_desc">Title (z-a)</Menu.Item>
-      </Menu>
-    );
-  }
-
   componentDidMount() {
     this.props
       .fetchPosts(get(this.props, 'match.params.category'))
@@ -45,17 +36,63 @@ class Category extends Component {
     this.props.resetPosts();
   }
 
-  filterPostsChange = ({ key }) => {
-    message.info(`Click on item ${key}`);
+  handleSortByChange = ({ key }) => {
+    this.props.updateSortBy(key);
+  };
+
+  handleSortDirectionChange = ({ key }) => {
+    this.props.updateSortDirection(key);
   };
 
   routeToCategory = link => {
     this.context.router.history.push(link);
   };
 
+  sortPosts = posts => {
+    const clone = posts.slice();
+    const { sortBy, sortDirection } = this.props;
+
+    const sortedPosts = clone.sort((a, b) => {
+      const valueA = a[sortBy];
+      const valueB = b[sortBy];
+
+      if (valueA < valueB) {
+        return -1;
+      }
+
+      if (valueA > valueB) {
+        return 1;
+      }
+
+      return 0;
+    });
+
+    if (sortDirection === 'descending') {
+      return sortedPosts.reverse();
+    }
+
+    return sortedPosts;
+  };
+
   render() {
-    const { categories, posts, match, postsLoading } = this.props;
+    const { categories, posts, match, postsLoading, sortBy, sortDirection } = this.props;
     const { category } = match.params;
+
+    const sortByOptions = (
+      <Menu onClick={this.handleSortByChange} selectedKeys={[sortBy]}>
+        <Menu.Item key="voteScore">{SORT_BY_MAP.voteScore}</Menu.Item>
+        <Menu.Item key="timestamp">{SORT_BY_MAP.timestamp}</Menu.Item>
+        <Menu.Item key="title">{SORT_BY_MAP.title}</Menu.Item>
+        <Menu.Item key="commentCount">{SORT_BY_MAP.commentCount}</Menu.Item>
+      </Menu>
+    );
+
+    const sortDirectionOptions = (
+      <Menu onClick={this.handleSortDirectionChange} selectedKeys={[sortDirection]}>
+        <Menu.Item key="ascending">Ascending</Menu.Item>
+        <Menu.Item key="descending">Descending</Menu.Item>
+      </Menu>
+    );
 
     return (
       <div>
@@ -83,9 +120,15 @@ class Category extends Component {
               </Col>
 
               <Col>
-                <Dropdown overlay={this.menu} placement="bottomRight">
+                <Dropdown overlay={sortByOptions} placement="bottomRight">
                   <a className="ant-dropdown-link" href="#">
-                    Sort by <Icon type="down" />
+                    Sort by ({SORT_BY_MAP[sortBy]})<Icon type="down" />
+                  </a>
+                </Dropdown>
+                <Dropdown overlay={sortDirectionOptions} placement="bottomRight">
+                  <a className="ant-dropdown-link" href="#" style={{ marginLeft: 10 }}>
+                    {capitalize(sortDirection)}{' '}
+                    <Icon type={sortDirection === 'ascending' ? 'arrow-down' : 'arrow-up'} />
                   </a>
                 </Dropdown>
               </Col>
@@ -93,7 +136,11 @@ class Category extends Component {
           </Layout.Header>
 
           <Layout.Content>
-            {postsLoading ? <Loader text="Loading Posts" /> : <Posts posts={posts} category={category} />}
+            {postsLoading ? (
+              <Loader text="Loading Posts" />
+            ) : (
+              <Posts posts={this.sortPosts(posts)} category={category} />
+            )}
           </Layout.Content>
         </Layout>
       </div>
@@ -115,19 +162,27 @@ Category.propTypes = {
   categories: PropTypes.array,
   posts: PropTypes.array,
   postsLoading: PropTypes.bool.isRequired,
+  sortBy: PropTypes.string.isRequired,
+  sortDirection: PropTypes.string.isRequired,
   resetPosts: PropTypes.func.isRequired,
-  fetchPosts: PropTypes.func.isRequired
+  fetchPosts: PropTypes.func.isRequired,
+  updateSortBy: PropTypes.func.isRequired,
+  updateSortDirection: PropTypes.func.isRequired
 };
 
 const mapStateToProps = ({ categories, posts, meta }) => ({
   postsLoading: meta.postsLoading,
+  sortBy: meta.postsSortBy,
+  sortDirection: meta.postsSortDirection,
   categories,
   posts
 });
 
 const mapDispatchToProps = dispatch => ({
   resetPosts: () => dispatch(resetPosts()),
-  fetchPosts: category => dispatch(fetchPosts(category))
+  fetchPosts: category => dispatch(fetchPosts(category)),
+  updateSortBy: value => dispatch(updatePostSortBy(value)),
+  updateSortDirection: value => dispatch(updatePostSortDirection(value))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Category);
