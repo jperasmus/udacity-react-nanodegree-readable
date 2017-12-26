@@ -7,15 +7,29 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 class AddEditPostForm extends Component {
-  handleSubmit = e => {
-    e.preventDefault();
+  constructor(props) {
+    super(props);
 
-    this.props.form.validateFields((err, values) => {
-      if (err) {
-        return message.error('Please double check all the fields and try submitting the post again');
-      }
+    this.state = {
+      formSubmitting: false
+    };
+  }
 
-      return this.props.submitPost(values);
+  handleSubmit = event => {
+    event.preventDefault();
+
+    this.setState({ formSubmitting: true }, () => {
+      this.props.form.validateFields((err, values) => {
+        if (err) {
+          this.setState({ formSubmitting: false });
+          return message.error('Please double check all the fields and try submitting the post again');
+        }
+
+        return this.props
+          .submitPost(values)
+          .then(() => this.setState({ formSubmitting: false }))
+          .catch(() => this.setState({ formSubmitting: false }));
+      });
     });
   };
 
@@ -72,7 +86,7 @@ class AddEditPostForm extends Component {
         </FormItem>
 
         <FormItem wrapperCol={{ span: 12, offset: 6 }}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" disabled={this.state.formSubmitting}>
             {id ? 'Update Post' : 'Add Post'}
           </Button>
         </FormItem>
@@ -98,28 +112,17 @@ export default Form.create({
   mapPropsToFields(props) {
     return {
       title: Form.createFormField({
-        // ...props.title,
         value: props.title
       }),
       author: Form.createFormField({
-        // ...props.author,
         value: props.author
       }),
       category: Form.createFormField({
-        // ...props.category,
         value: props.category
       }),
       body: Form.createFormField({
-        // ...props.body,
         value: props.body
       })
     };
   }
-  // onFieldsChange(props, fields) {
-  //   console.log('onFieldsChange', fields);
-  //   props.dispatch({
-  //     type: 'save_fields',
-  //     payload: fields,
-  //   });
-  // },
 })(AddEditPostForm);
