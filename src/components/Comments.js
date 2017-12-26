@@ -51,7 +51,7 @@ class Comments extends Component {
     const { author, comment } = this.state;
     this.props.addComment({ body: comment.value, author: author.value, parentId: this.props.postId }).then(() => {
       message.success('Comment successfully added!');
-      this.setState({ showAddModal: false });
+      this.setState({ showAddModal: false, comment: { value: '' }, author: { value: '' } });
     });
   };
 
@@ -130,7 +130,7 @@ class Comments extends Component {
               {...formItemLayout}
               label="Comment"
               validateStatus={comment.validateStatus}
-              help={comment.errorMsg || 'Make it a good one!'}
+              help={comment.errorMsg}
             >
               <TextArea
                 autosize={{ minRows: 2, maxRows: 4 }}
