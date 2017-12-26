@@ -61,7 +61,7 @@ export function editPost(payload) {
 
 export function editComment(payload) {
   const { id } = payload;
-  const body = { ...payload };
+  const body = { timestamp: Date.now(), ...payload };
   delete body.id;
 
   return http(`${API_BASE_URL}/comments/${id}`, { method: 'PUT', body: JSON.stringify(body) }).then(res => res.json());

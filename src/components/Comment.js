@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { List, Avatar, Icon, Tooltip, Modal, message, Button } from 'antd';
+import { List, Avatar, Icon, Tooltip, Modal, message, Button, Input } from 'antd';
 import relativeDate from 'relative-date';
 import Voter from './Voter';
 import { deleteComment, editComment } from '../actions';
 
 const { confirm } = Modal;
+const { TextArea } = Input;
 
 class Comment extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      showEditModal: false
+      showEditModal: false,
+      comment: props.body
     };
   }
 
@@ -31,7 +33,22 @@ class Comment extends Component {
   };
 
   showEditModal = () => {
-    //
+    this.setState({ showEditModal: true });
+  };
+
+  handleEditOk = () => {
+    this.props.editComment({ body: this.state.comment, id: this.props.id }).then(() => {
+      message.success('Comment successfully updated!');
+      this.setState({ showEditModal: false });
+    });
+  };
+
+  handleEditCancel = () => {
+    this.setState({ showEditModal: false });
+  };
+
+  handleCommentChange = event => {
+    this.setState({ comment: event.target.value });
   };
 
   render() {
@@ -71,23 +88,24 @@ class Comment extends Component {
         />
         <Modal
           visible={this.state.showEditModal}
-          title="Title"
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
+          title="Edit Comment"
+          onOk={this.handleEditOk}
+          onCancel={this.handleEditCancel}
           footer={[
-            <Button key="back" onClick={this.handleCancel}>
-              Return
+            <Button key="cancel" onClick={this.handleEditCancel}>
+              Cancel
             </Button>,
-            <Button key="submit" type="primary" onClick={this.handleOk}>
-              Submit
+            <Button key="save" type="primary" onClick={this.handleEditOk}>
+              Save
             </Button>
           ]}
         >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          <TextArea
+            placeholder=""
+            autosize={{ minRows: 2, maxRows: 4 }}
+            onChange={this.handleCommentChange}
+            value={this.state.comment}
+          />
         </Modal>
       </List.Item>
     );
@@ -101,8 +119,8 @@ Comment.propTypes = {
   author: PropTypes.string.isRequired,
   voteScore: PropTypes.number.isRequired,
   deleted: PropTypes.bool.isRequired,
-  deleteComment: PropTypes.func.isRequired
-  // editComment: PropTypes.func.isRequired
+  deleteComment: PropTypes.func.isRequired,
+  editComment: PropTypes.func.isRequired
 };
 
 const mapStateToProps = () => ({});
