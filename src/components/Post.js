@@ -27,7 +27,7 @@ class Post extends Component {
     const { title, body, id, author, voteScore, commentCount, timestamp, category, deleted } = this.props;
 
     if (deleted) {
-      message.info('This post has been deleted');
+      message.success('Successfully deleted post!');
       return null;
     }
 
