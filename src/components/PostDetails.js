@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Layout, Card, Icon, Tooltip, Alert, Modal, Breadcrumb } from 'antd';
+import { Layout, Card, Icon, Tooltip, message, Modal, Breadcrumb } from 'antd';
 import { Link } from 'react-router-dom';
 import relativeDate from 'relative-date';
 import get from 'lodash.get';
 import capitalize from 'lodash.capitalize';
 import Loader from './Loader';
 import Voter from './Voter';
+import NotFound from './NotFound';
 import Comments from './Comments';
 import { fetchCurrentPost, fetchCurrentPostComments, resetCurrentPost, deletePost } from '../actions';
 
@@ -29,7 +30,7 @@ class PostDetails extends Component {
       title: 'Sure you want to delete this post?',
       content: 'This action can not be undone',
       onOk: () => {
-        this.props.deletePost(this.props.id);
+        this.props.deletePost(this.props.id).then(() => message.info('This post has been deleted'));
       },
       onCancel() {
         // User pressed "Cancel", don't do anything
@@ -52,12 +53,12 @@ class PostDetails extends Component {
       comments
     } = this.props;
 
-    if (deleted) {
-      return <Alert message="This post has been deleted" type="info" />;
-    }
-
     if (currentPostLoading) {
       return <Loader text="Loading Post Details" />;
+    }
+
+    if (deleted || !id) {
+      return <NotFound />;
     }
 
     return (
